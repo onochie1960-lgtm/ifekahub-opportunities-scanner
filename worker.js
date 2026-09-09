@@ -306,8 +306,14 @@ export default {
   },
 
   async scheduled(controller,env,ctx) {
-    ctx.waitUntil(
-      scan(env).catch(e=>console.error("Scheduled scan failed:",e))
-    );
-  }
-};
+  ctx.waitUntil(
+    (async()=>{
+      try {
+        const report=await scan(env);
+        console.log("SCAN_REPORT",JSON.stringify(report));
+      } catch(e) {
+        console.error("Scheduled scan failed:",e);
+      }
+    })()
+  );
+}
