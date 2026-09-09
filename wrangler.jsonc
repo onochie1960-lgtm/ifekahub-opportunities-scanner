@@ -1,0 +1,7 @@
+{
+  "$schema": "https://unpkg.com/wrangler@latest/config-schema.json",
+  "name": "ifekahub-opportunities",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-09",
+  "workers_dev": true
+}
