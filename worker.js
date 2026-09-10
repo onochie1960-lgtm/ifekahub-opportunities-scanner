@@ -251,7 +251,6 @@ async function scan(env) {
     } catch(e) {
       sr.error=e.message;
       report.errors.push({source:source[0],error:e.message});
-    }
     report.sources.push(sr);
   }
 
