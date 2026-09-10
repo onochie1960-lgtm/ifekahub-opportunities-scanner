@@ -339,7 +339,7 @@ export default {
     }
 
     return new Response("Not found",{status:404});
-  },
+      },
 
   async scheduled(controller,env,ctx) {
   ctx.waitUntil(
@@ -351,6 +351,6 @@ export default {
         console.error("Scheduled scan failed:",e);
       }
     })()
-  );
+  )
 }
 }
