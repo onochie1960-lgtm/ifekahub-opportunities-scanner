@@ -325,23 +325,39 @@ export default {
         },{status:500});
       }
     }
-    if(request.method==="POST" && url.pathname==="/scan") {  if(!authorized(request,env)) {
+        if(request.method==="POST" && url.pathname==="/scan") {
+      if(!authorized(request,env)) {
         return Response.json(
           {ok:false,error:"Unauthorized. Add SCAN_TOKEN and use Authorization: Bearer SCAN_TOKEN."},
           {status:401}
         );
       }
+
       try {
         return Response.json(await scan(env));
       } catch(e) {
-        return Response.json({ok:false,error:e.message},{status:500});
+        return Response.json(
+          {ok:false,error:e.message},
+          {status:500}
+        );
       }
     }
 
     return new Response("Not found",{status:404});
-      },
+  },
 
   async scheduled(controller,env,ctx) {
+  ctx.waitUntil(
+    (async()=>{
+      try {
+        const report=await scan(env);
+        console.log("SCAN_REPORT",JSON.stringify(report));
+      } catch(e) {
+        console.error("Scheduled scan failed:",e);
+      }
+    })()
+  );
+}
   ctx.waitUntil(
     (async()=>{
       try {
