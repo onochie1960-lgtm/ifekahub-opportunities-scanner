@@ -3,5 +3,8 @@
   "name": "ifekahub-opportunities",
   "main": "worker.js",
   "compatibility_date": "2026-09-09",
-  "workers_dev": true
+  "workers_dev": true,
+  "vars": {
+    "SUPABASE_URL": "https://ywpavqsencpilxisltsm.supabase.co"
+  }
 }
