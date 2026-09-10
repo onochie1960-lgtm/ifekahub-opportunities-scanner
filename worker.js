@@ -286,10 +286,46 @@ export default {
         cron:"every 6 hours after approval",
         time:new Date().toISOString()
       });
-    }
+        if(request.method==="GET" && url.pathname==="/supabase-test") {
+      try {
+        const base=String(env.SUPABASE_URL||"").replace(/\/$/,"");
+        const key=String(env.SUPABASE_SERVICE_ROLE_KEY||"").trim();
 
-    if(request.method==="POST" && url.pathname==="/scan") {
-      if(!authorized(request,env)) {
+        if(!base || !key) {
+          throw new Error("Supabase configuration is missing.");
+        }
+
+        const r=await fetch(
+          base+"/rest/v1/opportunity_sources?select=id&limit=1",
+          {
+            headers:{
+              "apikey":key,
+              "Authorization":"Bearer "+key
+            }
+          }
+        );
+
+        if(!r.ok) {
+          throw new Error("Supabase HTTP "+r.status+": "+await r.text());
+        }
+
+        const rows=await r.json();
+
+        return Response.json({
+          ok:true,
+          supabase:true,
+          message:"Supabase connection successful",
+          rows_found:Array.isArray(rows)?rows.length:0
+        });
+      } catch(e) {
+        return Response.json({
+          ok:false,
+          supabase:false,
+          error:e.message
+        },{status:500});
+      }
+    }
+    if(request.method==="POST" && url.pathname==="/scan") {  if(!authorized(request,env)) {
         return Response.json(
           {ok:false,error:"Unauthorized. Add SCAN_TOKEN and use Authorization: Bearer SCAN_TOKEN."},
           {status:401}
